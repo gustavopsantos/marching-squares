@@ -40,7 +40,7 @@ public static class GenerateVoxel
     {
         Vector3[] vertices =
         {
-            voxel.BottomLeftPoint,
+            voxel.SouthWest.Center,
             voxel.GetLeftIntersection(isoValue),
             voxel.GetBottomIntersection(isoValue)
         };
@@ -57,7 +57,7 @@ public static class GenerateVoxel
     {
         Vector3[] vertices =
         {
-            voxel.BottomRightPoint,
+            voxel.SouthEast.Center,
             voxel.GetBottomIntersection(isoValue),
             voxel.GetRightIntersection(isoValue)
         };
@@ -74,13 +74,13 @@ public static class GenerateVoxel
     {
         Vector3[] vertices =
         {
-            voxel.BottomLeftPoint,
+            voxel.SouthWest.Center,
             voxel.GetLeftIntersection(isoValue),
             voxel.GetRightIntersection(isoValue),
 
             voxel.GetRightIntersection(isoValue),
-            voxel.BottomRightPoint,
-            voxel.BottomLeftPoint
+            voxel.SouthEast.Center,
+            voxel.SouthWest.Center
         };
 
         int[] triangles =
@@ -96,7 +96,7 @@ public static class GenerateVoxel
     {
         Vector3[] vertices =
         {
-            voxel.TopRightPoint,
+            voxel.NorthEast.Center,
             voxel.GetRightIntersection(isoValue),
             voxel.GetTopIntersection(isoValue)
         };
@@ -115,8 +115,8 @@ public static class GenerateVoxel
         var r = voxel.GetRightIntersection(isoValue);
         var b = voxel.GetBottomIntersection(isoValue);
         var t = voxel.GetTopIntersection(isoValue);
-        var bl = voxel.BottomLeftPoint;
-        var tr = voxel.TopRightPoint;
+        var bl = voxel.SouthWest.Center;
+        var tr = voxel.NorthEast.Center;
 
         Vector3[] vertices =
         {
@@ -143,10 +143,10 @@ public static class GenerateVoxel
         {
             voxel.GetBottomIntersection(isoValue),
             voxel.GetTopIntersection(isoValue),
-            voxel.TopRightPoint,
+            voxel.NorthEast.Center,
 
-            voxel.TopRightPoint,
-            voxel.BottomRightPoint,
+            voxel.NorthEast.Center,
+            voxel.SouthEast.Center,
             voxel.GetBottomIntersection(isoValue)
         };
 
@@ -163,17 +163,17 @@ public static class GenerateVoxel
     {
         Vector3[] vertices =
         {
-            voxel.BottomRightPoint,
-            voxel.BottomLeftPoint,
+            voxel.SouthEast.Center,
+            voxel.SouthWest.Center,
             voxel.GetLeftIntersection(isoValue),
 
-            voxel.BottomRightPoint,
+            voxel.SouthEast.Center,
             voxel.GetLeftIntersection(isoValue),
             voxel.GetTopIntersection(isoValue),
 
-            voxel.BottomRightPoint,
+            voxel.SouthEast.Center,
             voxel.GetTopIntersection(isoValue),
-            voxel.TopRightPoint
+            voxel.NorthEast.Center
         };
 
         int[] triangles =
@@ -191,7 +191,7 @@ public static class GenerateVoxel
         Vector3[] vertices =
         {
             voxel.GetLeftIntersection(isoValue),
-            voxel.TopLeftPoint,
+            voxel.NorthWest.Center,
             voxel.GetTopIntersection(isoValue)
         };
 
@@ -207,13 +207,13 @@ public static class GenerateVoxel
     {
         Vector3[] vertices =
         {
-            voxel.BottomLeftPoint,
-            voxel.TopLeftPoint,
+            voxel.SouthWest.Center,
+            voxel.NorthWest.Center,
             voxel.GetTopIntersection(isoValue),
 
             voxel.GetTopIntersection(isoValue),
             voxel.GetBottomIntersection(isoValue),
-            voxel.BottomLeftPoint
+            voxel.SouthWest.Center
         };
 
         int[] triangles =
@@ -231,8 +231,8 @@ public static class GenerateVoxel
         var r = voxel.GetRightIntersection(isoValue);
         var b = voxel.GetBottomIntersection(isoValue);
         var t = voxel.GetTopIntersection(isoValue);
-        var br = voxel.BottomRightPoint;
-        var tl = voxel.TopLeftPoint;
+        var br = voxel.SouthEast.Center;
+        var tl = voxel.NorthWest.Center;
 
         Vector3[] vertices =
         {
@@ -257,17 +257,17 @@ public static class GenerateVoxel
     {
         Vector3[] vertices =
         {
-            voxel.BottomLeftPoint,
-            voxel.TopLeftPoint,
+            voxel.SouthWest.Center,
+            voxel.NorthWest.Center,
             voxel.GetTopIntersection(isoValue),
 
-            voxel.BottomLeftPoint,
+            voxel.SouthWest.Center,
             voxel.GetTopIntersection(isoValue),
             voxel.GetRightIntersection(isoValue),
 
-            voxel.BottomLeftPoint,
+            voxel.SouthWest.Center,
             voxel.GetRightIntersection(isoValue),
-            voxel.BottomRightPoint
+            voxel.SouthEast.Center
         };
 
         int[] triangles =
@@ -285,10 +285,10 @@ public static class GenerateVoxel
         Vector3[] vertices =
         {
             voxel.GetLeftIntersection(isoValue),
-            voxel.TopLeftPoint,
-            voxel.TopRightPoint,
+            voxel.NorthWest.Center,
+            voxel.NorthEast.Center,
 
-            voxel.TopRightPoint,
+            voxel.NorthEast.Center,
             voxel.GetRightIntersection(isoValue),
             voxel.GetLeftIntersection(isoValue)
         };
@@ -306,17 +306,17 @@ public static class GenerateVoxel
     {
         Vector3[] vertices =
         {
-            voxel.BottomLeftPoint,
-            voxel.TopLeftPoint,
+            voxel.SouthWest.Center,
+            voxel.NorthWest.Center,
             voxel.GetBottomIntersection(isoValue),
 
             voxel.GetBottomIntersection(isoValue),
-            voxel.TopLeftPoint,
+            voxel.NorthWest.Center,
             voxel.GetRightIntersection(isoValue),
 
             voxel.GetRightIntersection(isoValue),
-            voxel.TopLeftPoint,
-            voxel.TopRightPoint
+            voxel.NorthWest.Center,
+            voxel.NorthEast.Center
         };
 
         int[] triangles =
@@ -334,16 +334,16 @@ public static class GenerateVoxel
         Vector3[] vertices =
         {
             voxel.GetLeftIntersection(isoValue),
-            voxel.TopLeftPoint,
-            voxel.TopRightPoint,
+            voxel.NorthWest.Center,
+            voxel.NorthEast.Center,
 
             voxel.GetLeftIntersection(isoValue),
-            voxel.TopRightPoint,
+            voxel.NorthEast.Center,
             voxel.GetBottomIntersection(isoValue),
 
             voxel.GetBottomIntersection(isoValue),
-            voxel.TopRightPoint,
-            voxel.BottomRightPoint
+            voxel.NorthEast.Center,
+            voxel.SouthEast.Center
         };
 
         int[] triangles =
@@ -360,13 +360,13 @@ public static class GenerateVoxel
     {
         Vector3[] vertices =
         {
-            voxel.BottomLeftPoint,
-            voxel.TopLeftPoint,
-            voxel.TopRightPoint,
+            voxel.SouthWest.Center,
+            voxel.NorthWest.Center,
+            voxel.NorthEast.Center,
 
-            voxel.TopRightPoint,
-            voxel.BottomRightPoint,
-            voxel.BottomLeftPoint
+            voxel.NorthEast.Center,
+            voxel.SouthEast.Center,
+            voxel.SouthWest.Center
         };
 
         int[] triangles =
