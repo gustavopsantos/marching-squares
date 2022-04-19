@@ -7,8 +7,8 @@ public class World : MonoBehaviour
     [field: SerializeField, Range(0, 1)] public float IsoValue { get; private set; } = 0.5f; 
     
     private readonly List<Voxel> _voxels = new List<Voxel>();
-    
-    public Vertex[,] Vertexes { get; private set; }
+
+    public Vertex[,] Vertexes { get; private set; } = new Vertex[0, 0];
 
     private void Start()
     {
