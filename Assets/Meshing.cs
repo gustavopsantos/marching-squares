@@ -16,7 +16,18 @@ public class Meshing : MonoBehaviour
     {
         while (_registry.TryDequeue(out var dirtyVoxel))
         {
-            dirtyVoxel.Rebuild(IsoValue);
+            dirtyVoxel.CalculateConfiguration(IsoValue);
+
+            if (dirtyVoxel.Configuration.Value == dirtyVoxel.Configuration.Prev)
+            {
+                // just update vertexes positions
+                dirtyVoxel.Rebuild(IsoValue);
+            }
+            else
+            {
+                // Rebuilds voxel from scratch
+                dirtyVoxel.Rebuild(IsoValue);
+            }
         }
     }
 }

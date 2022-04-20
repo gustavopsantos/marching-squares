@@ -12,6 +12,8 @@ public class Voxel : MonoBehaviour
     public Vertex NorthEast { get; private set; } // top right
     public Vertex SouthEast { get; private set; } // bottom right
 
+    public Observable<byte> Configuration { get; } = new Observable<byte>(0);
+
     public void Init(Vertex southWest, Vertex northWest, Vertex northEast, Vertex southEast)
     {
         SouthWest = southWest;
@@ -23,15 +25,19 @@ public class Voxel : MonoBehaviour
         NorthWest.Dependents.Add(this);
         NorthEast.Dependents.Add(this);
         SouthEast.Dependents.Add(this);
+
+        Configuration.OnValueChanged += (from, to) => Debug.Log($"Voxel config changed from {from} to {to}");
     }
 
-    public int GetContourKind(float isoValue)
+    public byte CalculateConfiguration(float isoValue)
     {
-        var configuration = 0;
+        byte configuration = 0;
         if (SouthWest.Value > isoValue) configuration += 1; // South west
         if (SouthEast.Value > isoValue) configuration += 2; // South east
         if (NorthEast.Value > isoValue) configuration += 4; // North east
         if (NorthWest.Value > isoValue) configuration += 8; // North west
+
+        Configuration.Value = configuration;
         return configuration;
     }
 
@@ -80,7 +86,7 @@ public class Voxel : MonoBehaviour
         };
 
         var isoValue = GetComponentInParent<Meshing>().IsoValue;
-        Handles.Label(center + Vector2.up * 0.1f, GetContourKind(isoValue).ToString(), style);
+        Handles.Label(center + Vector2.up * 0.1f, CalculateConfiguration(isoValue).ToString(), style);
 
         using (new GizmoColorScope(Color.yellow))
         {

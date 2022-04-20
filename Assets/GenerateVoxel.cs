@@ -23,10 +23,10 @@ public static class GenerateVoxel
         {14, GenerateConfiguration14},
         {15, GenerateConfiguration15},
     };
-
+    
     public static ProceduralMesh Generate(Voxel voxel, float isoValue)
     {
-        var contourKind = voxel.GetContourKind(isoValue);
+        var contourKind = voxel.CalculateConfiguration(isoValue);
         var generator = _registry[contourKind];
         return generator.Invoke(voxel, isoValue);
     }
@@ -38,12 +38,9 @@ public static class GenerateVoxel
 
     private static ProceduralMesh GenerateConfiguration1(Voxel voxel, float isoValue)
     {
-        Vector3[] vertices =
-        {
-            voxel.SouthWest.Center,
-            voxel.GetLeftIntersection(isoValue),
-            voxel.GetBottomIntersection(isoValue)
-        };
+        var vertices = new Vector3[3];
+        
+        UpdateConfiguration1(voxel, isoValue, vertices);
 
         int[] triangles =
         {
@@ -51,6 +48,13 @@ public static class GenerateVoxel
         };
 
         return new ProceduralMesh(vertices, triangles);
+    }
+
+    private static void UpdateConfiguration1(Voxel voxel, float isoValue, IList<Vector3> vertices)
+    {
+        vertices[0] = voxel.SouthWest.Center;
+        vertices[1] = voxel.GetLeftIntersection(isoValue);
+        vertices[2] = voxel.GetBottomIntersection(isoValue);
     }
 
     private static ProceduralMesh GenerateConfiguration2(Voxel voxel, float isoValue)

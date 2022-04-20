@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1951c703ebee7c245a8c75fc5ad993be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radius: 4
+  _radius: 1
   _world: {fileID: 205578504}
   _meshing: {fileID: 205578507}
   _camera: {fileID: 980177944}
@@ -244,7 +244,7 @@ Camera:
   far clip plane: 1
   field of view: 60
   orthographic: 1
-  orthographic size: 64
+  orthographic size: 4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

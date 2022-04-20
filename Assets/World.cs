@@ -15,7 +15,7 @@ public class World : MonoBehaviour
 
     private void InitVertexes()
     {
-        Vertexes = new Vertex[128, 128];
+        Vertexes = new Vertex[5, 5];
 
         for (int row = 0; row < Vertexes.GetLength(1); row++)
         {
