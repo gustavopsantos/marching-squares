@@ -21,7 +21,7 @@ public class World : MonoBehaviour
     {
         while (DirtyVoxels.TryDequeue(out var voxel))
         {
-            voxel.Tick(IsoValue);
+            voxel.Rebuild(IsoValue);
         }
     }
 

@@ -64,7 +64,7 @@ public class Voxel : MonoBehaviour
         _meshFilter = gameObject.GetComponent<MeshFilter>();
     }
 
-    public void Tick(float isoValue)
+    public void Rebuild(float isoValue)
     {
         _meshFilter.sharedMesh = GenerateVoxel.Generate(this, isoValue).ToMesh();
     }
