@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Brush : MonoBehaviour
 {
-    [SerializeField] private float _radius = 1;
+    [SerializeField] private float _radius = 2;
     [SerializeField] private World _target;
     [SerializeField] private Camera _camera;
     [SerializeField, Range(-2, +2)] private float _increment = 1;
@@ -17,13 +17,24 @@ public class Brush : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            foreach (var voxel in _target.Vertexes)
+            foreach (var vertex in _target.Vertexes)
             {
-                var distance = Vector3.Distance(GetBrushCenter(), voxel.Center);
+                var distance = Vector3.Distance(GetBrushCenter(), vertex.Center);
+
+                if (distance > _radius)
+                {
+                    continue;
+                }
+
                 var normalizedDistance = distance / _radius;
                 var power = Mathf.Lerp(_increment, 0, normalizedDistance);
                 var framedIncrement = power * Time.deltaTime;
-                voxel.Value = Mathf.Clamp01(voxel.Value + framedIncrement);
+                vertex.Value = Mathf.Clamp01(vertex.Value + framedIncrement);
+
+                foreach (var voxel in vertex.Dependents)
+                {
+                    _target.DirtyVoxels.Enqueue(voxel);
+                }
             }
         }
     }

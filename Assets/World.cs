@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class World : MonoBehaviour
 {
-    [SerializeField] private MeshFilter _meshFilter;
-    [field: SerializeField, Range(0, 1)] public float IsoValue { get; private set; } = 0.5f; 
-    
-    private readonly List<Voxel> _voxels = new List<Voxel>();
+    [SerializeField] private Voxel _voxelPrefab;
+    [field: SerializeField, Range(0, 1)] public float IsoValue { get; private set; } = 0.5f;
+
+    public readonly Queue<Voxel> DirtyVoxels = new ();
 
     public Vertex[,] Vertexes { get; private set; } = new Vertex[0, 0];
 
@@ -17,21 +17,17 @@ public class World : MonoBehaviour
         InitVoxels();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        var procedural = ProceduralMesh.Empty;
-        
-        foreach (var voxel in _voxels)
+        while (DirtyVoxels.TryDequeue(out var voxel))
         {
-            procedural += GenerateVoxel.Generate(voxel, IsoValue);
+            voxel.Tick(IsoValue);
         }
-
-        _meshFilter.sharedMesh = procedural.ToMesh();
     }
 
     private void InitVertexes()
     {
-        Vertexes = new Vertex[5, 5];
+        Vertexes = new Vertex[32, 32];
 
         for (int row = 0; row < Vertexes.GetLength(1); row++)
         {
@@ -59,15 +55,14 @@ public class World : MonoBehaviour
         {
             for (int column = 0; column < Vertexes.GetLength(0) - 1; column++)
             {
-                var voxel = new GameObject($"Voxel ({column},{row})").AddComponent<Voxel>();
-                voxel.transform.SetParent(parent.transform);
+                var voxel = Instantiate(_voxelPrefab, parent);
+                voxel.name = $"Voxel ({column},{row})";
+                
                 voxel.Init(
                     Vertexes[column + 0, row + 0],
                     Vertexes[column + 0, row + 1],
                     Vertexes[column + 1, row + 1],
                     Vertexes[column + 1, row + 0]);
-
-                _voxels.Add(voxel);
             }
         }
     }

@@ -1,8 +1,12 @@
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 public class Voxel : MonoBehaviour
 {
+    private MeshFilter _meshFilter;
+
     public Vertex SouthWest { get; private set; } // bottom left
     public Vertex NorthWest { get; private set; } // top left
     public Vertex NorthEast { get; private set; } // top right
@@ -14,6 +18,11 @@ public class Voxel : MonoBehaviour
         NorthWest = northWest;
         NorthEast = northEast;
         SouthEast = southEast;
+        
+        SouthWest.Dependents.Add(this);
+        NorthWest.Dependents.Add(this);
+        NorthEast.Dependents.Add(this);
+        SouthEast.Dependents.Add(this);
     }
 
     public int GetContourKind(float isoValue)
@@ -48,6 +57,16 @@ public class Voxel : MonoBehaviour
     {
         var topIntersectionValue = Mathf.InverseLerp(NorthEast.Value, NorthWest.Value, isoValue);
         return Vector2.Lerp(NorthEast.Center, NorthWest.Center, topIntersectionValue);
+    }
+
+    private void Start()
+    {
+        _meshFilter = gameObject.GetComponent<MeshFilter>();
+    }
+
+    public void Tick(float isoValue)
+    {
+        _meshFilter.sharedMesh = GenerateVoxel.Generate(this, isoValue).ToMesh();
     }
 
     public void OnDrawGizmosSelected()

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ public class Vertex
 {
     public float Value;
     public Vector2 Center;
+    public readonly List<Voxel> Dependents = new List<Voxel>();
 
     public Vertex(float value, Vector2 center)
     {
@@ -14,7 +16,7 @@ public class Vertex
 
     public void DrawGizmos()
     {
-        //Gizmos.DrawWireCube(Center, new Vector3(1, 1, 0));
+        Gizmos.DrawWireCube(Center, new Vector3(1, 1, 0));
 
         var style = new GUIStyle("label")
         {
