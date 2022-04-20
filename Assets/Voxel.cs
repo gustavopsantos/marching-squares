@@ -79,7 +79,7 @@ public class Voxel : MonoBehaviour
             alignment = TextAnchor.MiddleCenter
         };
 
-        var isoValue = FindObjectOfType<World>().IsoValue;
+        var isoValue = GetComponentInParent<Meshing>().IsoValue;
         Handles.Label(center + Vector2.up * 0.1f, GetContourKind(isoValue).ToString(), style);
 
         using (new GizmoColorScope(Color.yellow))

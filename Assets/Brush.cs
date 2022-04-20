@@ -4,7 +4,8 @@ using UnityEngine;
 public class Brush : MonoBehaviour
 {
     [SerializeField] private float _radius = 2;
-    [SerializeField] private World _target;
+    [SerializeField] private World _world;
+    [SerializeField] private Meshing _meshing;
     [SerializeField] private Camera _camera;
     [SerializeField, Range(-2, +2)] private float _increment = 1;
 
@@ -17,7 +18,7 @@ public class Brush : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            foreach (var vertex in _target.Vertexes)
+            foreach (var vertex in _world.Vertexes)
             {
                 var distance = Vector3.Distance(GetBrushCenter(), vertex.Center);
 
@@ -33,7 +34,7 @@ public class Brush : MonoBehaviour
 
                 foreach (var voxel in vertex.Dependents)
                 {
-                    _target.DirtyVoxels.Enqueue(voxel);
+                    _meshing.Enqueue(voxel);
                 }
             }
         }

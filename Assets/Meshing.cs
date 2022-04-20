@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Meshing : MonoBehaviour
 {
-    [field: SerializeField, Range(0, 1)] public float IsoValue { get; private set; } = 0.5f;
+    [field: SerializeField, Range(0, 1)] public float IsoValue { get; private set; } = 0.01f;
     
     private readonly Queue<Voxel> _registry = new ();
 

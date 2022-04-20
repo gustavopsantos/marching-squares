@@ -1,12 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class World : MonoBehaviour
 {
     [SerializeField] private Voxel _voxelPrefab;
-    [field: SerializeField, Range(0, 1)] public float IsoValue { get; private set; } = 0.5f;
-
-    public readonly Queue<Voxel> DirtyVoxels = new ();
 
     public Vertex[,] Vertexes { get; private set; } = new Vertex[0, 0];
 
@@ -15,14 +11,6 @@ public class World : MonoBehaviour
         InitVertexes();
         CentersVertexes();
         InitVoxels();
-    }
-
-    private void LateUpdate()
-    {
-        while (DirtyVoxels.TryDequeue(out var voxel))
-        {
-            voxel.Rebuild(IsoValue);
-        }
     }
 
     private void InitVertexes()
@@ -57,7 +45,7 @@ public class World : MonoBehaviour
             {
                 var voxel = Instantiate(_voxelPrefab, parent);
                 voxel.name = $"Voxel ({column},{row})";
-                
+
                 voxel.Init(
                     Vertexes[column + 0, row + 0],
                     Vertexes[column + 0, row + 1],

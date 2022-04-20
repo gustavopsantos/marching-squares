@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 205578505}
   - component: {fileID: 205578504}
   - component: {fileID: 205578506}
+  - component: {fileID: 205578507}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -186,6 +187,19 @@ MonoBehaviour:
   _target: {fileID: 205578504}
   _camera: {fileID: 980177944}
   _increment: 2
+--- !u!114 &205578507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205578503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ae28971571eab459d2a52251b2d038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsoValue>k__BackingField: 0.01
 --- !u!1 &980177942
 GameObject:
   m_ObjectHideFlags: 0
