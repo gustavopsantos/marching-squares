@@ -1,13 +1,16 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Chunking : MonoBehaviour
 {
     [SerializeField] private Chunk _chunkPrefab;
 
+    public readonly List<Chunk> Chunks = new List<Chunk>();
+
     private void Start()
     {
-        var worldWidth = 5;
-        var worldHeight = 7;
+        var worldWidth = 128;
+        var worldHeight = 128;
         var chunkWidth = 4;
         var chunkHeight = 4;
 
@@ -17,7 +20,9 @@ public class Chunking : MonoBehaviour
             {
                 var w = Mathf.Clamp(worldWidth - column, 1, chunkWidth);
                 var h = Mathf.Clamp(worldHeight - row, 1, chunkHeight);
-                Instantiate(_chunkPrefab).Init(column, row, w, h);
+                var chunk = Instantiate(_chunkPrefab, transform);
+                chunk.Init(column, row, w, h);
+                Chunks.Add(chunk);
             }
         }
     }

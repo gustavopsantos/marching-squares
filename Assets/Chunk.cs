@@ -19,7 +19,7 @@ public class Chunk : MonoBehaviour
         _width = widthInVoxels;
         _height = heightInVoxels;
         name = $"Chunk ({x},{y})";
-        transform.position = new Vector3(x, y);
+        //transform.position = new Vector3(x, y);
         InitVertexes();
         InitVoxels();
     }

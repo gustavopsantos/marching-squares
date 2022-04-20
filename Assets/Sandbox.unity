@@ -155,7 +155,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _voxelPrefab: {fileID: -3303681949855043432, guid: c0148004b39fb5c41acb8ee5ceec073f, type: 3}
-  <IsoValue>k__BackingField: 0.01
 --- !u!4 &205578505
 Transform:
   m_ObjectHideFlags: 0
@@ -183,10 +182,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1951c703ebee7c245a8c75fc5ad993be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radius: 2
-  _target: {fileID: 205578504}
+  _radius: 4
+  _world: {fileID: 205578504}
+  _meshing: {fileID: 205578507}
   _camera: {fileID: 980177944}
-  _increment: 2
+  _increment: 16
 --- !u!114 &205578507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ae28971571eab459d2a52251b2d038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <IsoValue>k__BackingField: 0.01
+  <IsoValue>k__BackingField: 0.5
 --- !u!1 &980177942
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,11 +240,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 2
+  near clip plane: -1
+  far clip plane: 1
   field of view: 60
   orthographic: 1
-  orthographic size: 16
+  orthographic size: 64
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -268,7 +268,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 980177942}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

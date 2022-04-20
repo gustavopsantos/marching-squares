@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class Brush : MonoBehaviour
 {
-    [SerializeField] private float _radius = 2;
+    [SerializeField] private float _radius = 4;
     [SerializeField] private World _world;
     [SerializeField] private Meshing _meshing;
     [SerializeField] private Camera _camera;
-    [SerializeField, Range(-2, +2)] private float _increment = 1;
+    [SerializeField, Range(-16, +16)] private float _increment = 16;
 
     private void Update()
     {
