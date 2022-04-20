@@ -21,12 +21,12 @@ public class Meshing : MonoBehaviour
             if (dirtyVoxel.Configuration.Value == dirtyVoxel.Configuration.Prev)
             {
                 // just update vertexes positions
-                dirtyVoxel.Rebuild(IsoValue);
+                dirtyVoxel.UpdateProceduralMesh(IsoValue, dirtyVoxel.Configuration.Value);
             }
             else
             {
                 // Rebuilds voxel from scratch
-                dirtyVoxel.Rebuild(IsoValue);
+                dirtyVoxel.RebuildProceduralMesh(IsoValue, dirtyVoxel.Configuration.Value);
             }
         }
     }

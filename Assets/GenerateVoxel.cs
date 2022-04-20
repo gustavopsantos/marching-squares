@@ -4,116 +4,146 @@ using UnityEngine;
 
 public static class GenerateVoxel
 {
-    private static readonly Dictionary<int, Func<Voxel, float, ProceduralMesh>> _registry = new()
+    private static readonly Dictionary<int, Action<Voxel, float, ProceduralMesh>> _rebuild = new()
     {
-        {0, GenerateConfiguration0},
-        {1, GenerateConfiguration1},
-        {2, GenerateConfiguration2},
-        {3, GenerateConfiguration3},
-        {4, GenerateConfiguration4},
-        {5, GenerateConfiguration5},
-        {6, GenerateConfiguration6},
-        {7, GenerateConfiguration7},
-        {8, GenerateConfiguration8},
-        {9, GenerateConfiguration9},
-        {10, GenerateConfiguration10},
-        {11, GenerateConfiguration11},
-        {12, GenerateConfiguration12},
-        {13, GenerateConfiguration13},
-        {14, GenerateConfiguration14},
-        {15, GenerateConfiguration15},
+        {0, RebuildConfiguration0},
+        {1, RebuildConfiguration1},
+        {2, RebuildConfiguration2},
+        {3, RebuildConfiguration3},
+        {4, RebuildConfiguration4},
+        {5, RebuildConfiguration5},
+        {6, RebuildConfiguration6},
+        {7, RebuildConfiguration7},
+        {8, RebuildConfiguration8},
+        {9, RebuildConfiguration9},
+        {10, RebuildConfiguration10},
+        {11, RebuildConfiguration11},
+        {12, RebuildConfiguration12},
+        {13, RebuildConfiguration13},
+        {14, RebuildConfiguration14},
+        {15, RebuildConfiguration15},
     };
-    
-    public static ProceduralMesh Generate(Voxel voxel, float isoValue)
+
+    private static readonly Dictionary<int, Action<Voxel, float, ProceduralMesh>> _update = new()
     {
-        var contourKind = voxel.CalculateConfiguration(isoValue);
-        var generator = _registry[contourKind];
-        return generator.Invoke(voxel, isoValue);
-    }
-    
-    private static ProceduralMesh GenerateConfiguration0(Voxel voxel, float isoValue)
+        {0, UpdateConfiguration0},
+        {1, UpdateConfiguration1},
+        {2, UpdateConfiguration2},
+        {3, UpdateConfiguration3},
+        {4, UpdateConfiguration4},
+        {5, UpdateConfiguration5},
+        {6, UpdateConfiguration6},
+        {7, UpdateConfiguration7},
+        {8, UpdateConfiguration8},
+        {9, UpdateConfiguration9},
+        {10, UpdateConfiguration10},
+        {11, UpdateConfiguration11},
+        {12, UpdateConfiguration12},
+        {13, UpdateConfiguration13},
+        {14, UpdateConfiguration14},
+        {15, UpdateConfiguration15},
+    };
+
+    // public static ProceduralMesh Generate(Voxel voxel, float isoValue)
+    // {
+    //     var contourKind = voxel.CalculateConfiguration(isoValue);
+    //     var generator = _registry[contourKind];
+    //     return generator.Invoke(voxel, isoValue);
+    // }
+
+    public static void Rebuild(Voxel voxel, float isoValue, byte configuration, ProceduralMesh procedural)
     {
-        return ProceduralMesh.Empty;
-    }
-
-    private static ProceduralMesh GenerateConfiguration1(Voxel voxel, float isoValue)
-    {
-        var vertices = new Vector3[3];
-        
-        UpdateConfiguration1(voxel, isoValue, vertices);
-
-        int[] triangles =
-        {
-            0, 1, 2
-        };
-
-        return new ProceduralMesh(vertices, triangles);
-    }
-
-    private static void UpdateConfiguration1(Voxel voxel, float isoValue, IList<Vector3> vertices)
-    {
-        vertices[0] = voxel.SouthWest.Center;
-        vertices[1] = voxel.GetLeftIntersection(isoValue);
-        vertices[2] = voxel.GetBottomIntersection(isoValue);
-    }
-
-    private static ProceduralMesh GenerateConfiguration2(Voxel voxel, float isoValue)
-    {
-        Vector3[] vertices =
-        {
-            voxel.SouthEast.Center,
-            voxel.GetBottomIntersection(isoValue),
-            voxel.GetRightIntersection(isoValue)
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2
-        };
-
-        return new ProceduralMesh(vertices, triangles);
+        procedural.Vertices.Clear();
+        procedural.Triangles.Clear();
+        _rebuild[configuration].Invoke(voxel, isoValue, procedural);
     }
 
-    private static ProceduralMesh GenerateConfiguration3(Voxel voxel, float isoValue)
+    public static void Update(Voxel voxel, float isoValue, byte configuration, ProceduralMesh procedural)
     {
-        Vector3[] vertices =
-        {
-            voxel.SouthWest.Center,
-            voxel.GetLeftIntersection(isoValue),
-            voxel.GetRightIntersection(isoValue),
+        _update[configuration].Invoke(voxel, isoValue, procedural);
+    }
 
-            voxel.GetRightIntersection(isoValue),
-            voxel.SouthEast.Center,
-            voxel.SouthWest.Center
-        };
+    private static void RebuildConfiguration0(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+    }
 
-        int[] triangles =
+    private static void UpdateConfiguration0(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+    }
+
+    private static void RebuildConfiguration1(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[3]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2});
+        UpdateConfiguration1(voxel, isoValue, proceduralMesh);
+    }
+
+    private static void UpdateConfiguration1(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.SouthWest.Center;
+        proceduralMesh.Vertices[1] = voxel.GetLeftIntersection(isoValue);
+        proceduralMesh.Vertices[2] = voxel.GetBottomIntersection(isoValue);
+    }
+
+    private static void RebuildConfiguration2(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[3]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2});
+        UpdateConfiguration2(voxel, isoValue, proceduralMesh);
+    }
+
+    private static void UpdateConfiguration2(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.SouthEast.Center;
+        proceduralMesh.Vertices[1] = voxel.GetBottomIntersection(isoValue);
+        proceduralMesh.Vertices[2] = voxel.GetRightIntersection(isoValue);
+    }
+
+    private static void RebuildConfiguration3(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[6]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2, 3, 4, 5});
+        UpdateConfiguration3(voxel, isoValue, proceduralMesh);
+    }
+
+    private static void UpdateConfiguration3(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.SouthWest.Center;
+        proceduralMesh.Vertices[1] = voxel.GetLeftIntersection(isoValue);
+        proceduralMesh.Vertices[2] = voxel.GetRightIntersection(isoValue);
+        proceduralMesh.Vertices[3] = voxel.GetRightIntersection(isoValue);
+        proceduralMesh.Vertices[4] = voxel.SouthEast.Center;
+        proceduralMesh.Vertices[5] = voxel.SouthWest.Center;
+    }
+
+    private static void RebuildConfiguration4(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[3]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2});
+        UpdateConfiguration4(voxel, isoValue, proceduralMesh);
+    }
+
+    private static void UpdateConfiguration4(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[1] = voxel.GetRightIntersection(isoValue);
+        proceduralMesh.Vertices[2] = voxel.GetTopIntersection(isoValue);
+    }
+
+    private static void RebuildConfiguration5(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[12]);
+        proceduralMesh.Triangles.AddRange(new int[]
         {
             0, 1, 2,
-            3, 4, 5
-        };
-
-        return new ProceduralMesh(vertices, triangles);
+            3, 4, 5,
+            6, 7, 8,
+            9, 10, 11
+        });
+        UpdateConfiguration5(voxel, isoValue, proceduralMesh);
     }
 
-    private static ProceduralMesh GenerateConfiguration4(Voxel voxel, float isoValue)
-    {
-        Vector3[] vertices =
-        {
-            voxel.NorthEast.Center,
-            voxel.GetRightIntersection(isoValue),
-            voxel.GetTopIntersection(isoValue)
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2
-        };
-
-        return new ProceduralMesh(vertices, triangles);
-    }
-
-    private static ProceduralMesh GenerateConfiguration5(Voxel voxel, float isoValue)
+    private static void UpdateConfiguration5(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
     {
         var l = voxel.GetLeftIntersection(isoValue);
         var r = voxel.GetRightIntersection(isoValue);
@@ -122,114 +152,102 @@ public static class GenerateVoxel
         var bl = voxel.SouthWest.Center;
         var tr = voxel.NorthEast.Center;
 
-        Vector3[] vertices =
-        {
-            bl, l, b,
-            b, l, r,
-            l, t, r,
-            t, tr, r
-        };
+        proceduralMesh.Vertices[0] = bl;
+        proceduralMesh.Vertices[1] = l;
+        proceduralMesh.Vertices[2] = b;
+        proceduralMesh.Vertices[3] = b;
+        proceduralMesh.Vertices[4] = l;
+        proceduralMesh.Vertices[5] = r;
+        proceduralMesh.Vertices[6] = l;
+        proceduralMesh.Vertices[7] = t;
+        proceduralMesh.Vertices[8] = r;
+        proceduralMesh.Vertices[9] = t;
+        proceduralMesh.Vertices[10] = tr;
+        proceduralMesh.Vertices[11] = r;
+    }
 
-        int[] triangles =
+    private static void RebuildConfiguration6(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[6]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2, 3, 4, 5});
+        UpdateConfiguration6(voxel, isoValue, proceduralMesh);
+    }
+
+    private static void UpdateConfiguration6(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.GetBottomIntersection(isoValue);
+        proceduralMesh.Vertices[1] = voxel.GetTopIntersection(isoValue);
+        proceduralMesh.Vertices[2] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[3] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[4] = voxel.SouthEast.Center;
+        proceduralMesh.Vertices[5] = voxel.GetBottomIntersection(isoValue);
+    }
+
+    private static void RebuildConfiguration7(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[9]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8});
+        UpdateConfiguration7(voxel, isoValue, proceduralMesh);
+    }
+
+    private static void UpdateConfiguration7(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.SouthEast.Center;
+        proceduralMesh.Vertices[1] = voxel.SouthWest.Center;
+        proceduralMesh.Vertices[2] = voxel.GetLeftIntersection(isoValue);
+        proceduralMesh.Vertices[3] = voxel.SouthEast.Center;
+        proceduralMesh.Vertices[4] = voxel.GetLeftIntersection(isoValue);
+        proceduralMesh.Vertices[5] = voxel.GetTopIntersection(isoValue);
+        proceduralMesh.Vertices[6] = voxel.SouthEast.Center;
+        proceduralMesh.Vertices[7] = voxel.GetTopIntersection(isoValue);
+        proceduralMesh.Vertices[8] = voxel.NorthEast.Center;
+    }
+
+    private static void RebuildConfiguration8(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[3]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2});
+        UpdateConfiguration8(voxel, isoValue, proceduralMesh);
+    }
+
+    private static void UpdateConfiguration8(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.GetLeftIntersection(isoValue);
+        proceduralMesh.Vertices[1] = voxel.NorthWest.Center;
+        proceduralMesh.Vertices[2] = voxel.GetTopIntersection(isoValue);
+    }
+
+    private static void RebuildConfiguration9(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[6]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2, 3, 4, 5});
+        UpdateConfiguration9(voxel, isoValue, proceduralMesh);
+    }
+
+    private static void UpdateConfiguration9(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.SouthWest.Center;
+        proceduralMesh.Vertices[1] = voxel.NorthWest.Center;
+        proceduralMesh.Vertices[2] = voxel.GetTopIntersection(isoValue);
+        proceduralMesh.Vertices[3] = voxel.GetTopIntersection(isoValue);
+        proceduralMesh.Vertices[4] = voxel.GetBottomIntersection(isoValue);
+        proceduralMesh.Vertices[5] = voxel.SouthWest.Center;
+    }
+
+    private static void RebuildConfiguration10(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[12]);
+        proceduralMesh.Triangles.AddRange(new int[]
         {
             0, 1, 2,
             3, 4, 5,
             6, 7, 8,
             9, 10, 11
-        };
-
-        return new ProceduralMesh(vertices, triangles);
+        });
+        UpdateConfiguration10(voxel, isoValue, proceduralMesh);
     }
 
-    private static ProceduralMesh GenerateConfiguration6(Voxel voxel, float isoValue)
-    {
-        Vector3[] vertices =
-        {
-            voxel.GetBottomIntersection(isoValue),
-            voxel.GetTopIntersection(isoValue),
-            voxel.NorthEast.Center,
-
-            voxel.NorthEast.Center,
-            voxel.SouthEast.Center,
-            voxel.GetBottomIntersection(isoValue)
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2,
-            3, 4, 5
-        };
-
-        return new ProceduralMesh(vertices, triangles);
-    }
-
-    private static ProceduralMesh GenerateConfiguration7(Voxel voxel, float isoValue)
-    {
-        Vector3[] vertices =
-        {
-            voxel.SouthEast.Center,
-            voxel.SouthWest.Center,
-            voxel.GetLeftIntersection(isoValue),
-
-            voxel.SouthEast.Center,
-            voxel.GetLeftIntersection(isoValue),
-            voxel.GetTopIntersection(isoValue),
-
-            voxel.SouthEast.Center,
-            voxel.GetTopIntersection(isoValue),
-            voxel.NorthEast.Center
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2,
-            3, 4, 5,
-            6, 7, 8
-        };
-
-        return new ProceduralMesh(vertices, triangles);
-    }
-
-    private static ProceduralMesh GenerateConfiguration8(Voxel voxel, float isoValue)
-    {
-        Vector3[] vertices =
-        {
-            voxel.GetLeftIntersection(isoValue),
-            voxel.NorthWest.Center,
-            voxel.GetTopIntersection(isoValue)
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2
-        };
-
-        return new ProceduralMesh(vertices, triangles);
-    }
-
-    private static ProceduralMesh GenerateConfiguration9(Voxel voxel, float isoValue)
-    {
-        Vector3[] vertices =
-        {
-            voxel.SouthWest.Center,
-            voxel.NorthWest.Center,
-            voxel.GetTopIntersection(isoValue),
-
-            voxel.GetTopIntersection(isoValue),
-            voxel.GetBottomIntersection(isoValue),
-            voxel.SouthWest.Center
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2,
-            3, 4, 5
-        };
-
-        return new ProceduralMesh(vertices, triangles);
-    }
-
-    private static ProceduralMesh GenerateConfiguration10(Voxel voxel, float isoValue)
+    private static void UpdateConfiguration10(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
     {
         var l = voxel.GetLeftIntersection(isoValue);
         var r = voxel.GetRightIntersection(isoValue);
@@ -238,147 +256,111 @@ public static class GenerateVoxel
         var br = voxel.SouthEast.Center;
         var tl = voxel.NorthWest.Center;
 
-        Vector3[] vertices =
-        {
-            br, b, r,
-            b, l, r,
-            r, l, t,
-            l, tl, t
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2,
-            3, 4, 5,
-            6, 7, 8,
-            9, 10, 11
-        };
-
-        return new ProceduralMesh(vertices, triangles);
+        proceduralMesh.Vertices[0] = br;
+        proceduralMesh.Vertices[1] = b;
+        proceduralMesh.Vertices[2] = r;
+        proceduralMesh.Vertices[3] = b;
+        proceduralMesh.Vertices[4] = l;
+        proceduralMesh.Vertices[5] = r;
+        proceduralMesh.Vertices[6] = r;
+        proceduralMesh.Vertices[7] = l;
+        proceduralMesh.Vertices[8] = t;
+        proceduralMesh.Vertices[9] = l;
+        proceduralMesh.Vertices[10] = tl;
+        proceduralMesh.Vertices[11] = t;
     }
 
-    private static ProceduralMesh GenerateConfiguration11(Voxel voxel, float isoValue)
+    private static void RebuildConfiguration11(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
     {
-        Vector3[] vertices =
-        {
-            voxel.SouthWest.Center,
-            voxel.NorthWest.Center,
-            voxel.GetTopIntersection(isoValue),
-
-            voxel.SouthWest.Center,
-            voxel.GetTopIntersection(isoValue),
-            voxel.GetRightIntersection(isoValue),
-
-            voxel.SouthWest.Center,
-            voxel.GetRightIntersection(isoValue),
-            voxel.SouthEast.Center
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2,
-            3, 4, 5,
-            6, 7, 8
-        };
-
-        return new ProceduralMesh(vertices, triangles);
+        proceduralMesh.Vertices.AddRange(new Vector3[9]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8});
+        UpdateConfiguration11(voxel, isoValue, proceduralMesh);
     }
 
-    private static ProceduralMesh GenerateConfiguration12(Voxel voxel, float isoValue)
+    private static void UpdateConfiguration11(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
     {
-        Vector3[] vertices =
-        {
-            voxel.GetLeftIntersection(isoValue),
-            voxel.NorthWest.Center,
-            voxel.NorthEast.Center,
-
-            voxel.NorthEast.Center,
-            voxel.GetRightIntersection(isoValue),
-            voxel.GetLeftIntersection(isoValue)
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2,
-            3, 4, 5
-        };
-
-        return new ProceduralMesh(vertices, triangles);
+        proceduralMesh.Vertices[0] = voxel.SouthWest.Center;
+        proceduralMesh.Vertices[1] = voxel.NorthWest.Center;
+        proceduralMesh.Vertices[2] = voxel.GetTopIntersection(isoValue);
+        proceduralMesh.Vertices[3] = voxel.SouthWest.Center;
+        proceduralMesh.Vertices[4] = voxel.GetTopIntersection(isoValue);
+        proceduralMesh.Vertices[5] = voxel.GetRightIntersection(isoValue);
+        proceduralMesh.Vertices[6] = voxel.SouthWest.Center;
+        proceduralMesh.Vertices[7] = voxel.GetRightIntersection(isoValue);
+        proceduralMesh.Vertices[8] = voxel.SouthEast.Center;
     }
 
-    private static ProceduralMesh GenerateConfiguration13(Voxel voxel, float isoValue)
+    private static void RebuildConfiguration12(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
     {
-        Vector3[] vertices =
-        {
-            voxel.SouthWest.Center,
-            voxel.NorthWest.Center,
-            voxel.GetBottomIntersection(isoValue),
-
-            voxel.GetBottomIntersection(isoValue),
-            voxel.NorthWest.Center,
-            voxel.GetRightIntersection(isoValue),
-
-            voxel.GetRightIntersection(isoValue),
-            voxel.NorthWest.Center,
-            voxel.NorthEast.Center
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2,
-            3, 4, 5,
-            6, 7, 8
-        };
-
-        return new ProceduralMesh(vertices, triangles);
+        proceduralMesh.Vertices.AddRange(new Vector3[6]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2, 3, 4, 5});
+        UpdateConfiguration12(voxel, isoValue, proceduralMesh);
     }
 
-    private static ProceduralMesh GenerateConfiguration14(Voxel voxel, float isoValue)
+    private static void UpdateConfiguration12(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
     {
-        Vector3[] vertices =
-        {
-            voxel.GetLeftIntersection(isoValue),
-            voxel.NorthWest.Center,
-            voxel.NorthEast.Center,
-
-            voxel.GetLeftIntersection(isoValue),
-            voxel.NorthEast.Center,
-            voxel.GetBottomIntersection(isoValue),
-
-            voxel.GetBottomIntersection(isoValue),
-            voxel.NorthEast.Center,
-            voxel.SouthEast.Center
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2,
-            3, 4, 5,
-            6, 7, 8
-        };
-
-        return new ProceduralMesh(vertices, triangles);
+        proceduralMesh.Vertices[0] = voxel.GetLeftIntersection(isoValue);
+        proceduralMesh.Vertices[1] = voxel.NorthWest.Center;
+        proceduralMesh.Vertices[2] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[3] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[4] = voxel.GetRightIntersection(isoValue);
+        proceduralMesh.Vertices[5] = voxel.GetLeftIntersection(isoValue);
     }
 
-    private static ProceduralMesh GenerateConfiguration15(Voxel voxel, float isoValue)
+    private static void RebuildConfiguration13(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
     {
-        Vector3[] vertices =
-        {
-            voxel.SouthWest.Center,
-            voxel.NorthWest.Center,
-            voxel.NorthEast.Center,
+        proceduralMesh.Vertices.AddRange(new Vector3[9]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8});
+        UpdateConfiguration13(voxel, isoValue, proceduralMesh);
+    }
 
-            voxel.NorthEast.Center,
-            voxel.SouthEast.Center,
-            voxel.SouthWest.Center
-        };
+    private static void UpdateConfiguration13(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.SouthWest.Center;
+        proceduralMesh.Vertices[1] = voxel.NorthWest.Center;
+        proceduralMesh.Vertices[2] = voxel.GetBottomIntersection(isoValue);
+        proceduralMesh.Vertices[3] = voxel.GetBottomIntersection(isoValue);
+        proceduralMesh.Vertices[4] = voxel.NorthWest.Center;
+        proceduralMesh.Vertices[5] = voxel.GetRightIntersection(isoValue);
+        proceduralMesh.Vertices[6] = voxel.GetRightIntersection(isoValue);
+        proceduralMesh.Vertices[7] = voxel.NorthWest.Center;
+        proceduralMesh.Vertices[8] = voxel.NorthEast.Center;
+    }
 
-        int[] triangles =
-        {
-            0, 1, 2,
-            3, 4, 5
-        };
+    private static void RebuildConfiguration14(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[9]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8});
+        UpdateConfiguration14(voxel, isoValue, proceduralMesh);
+    }
 
-        return new ProceduralMesh(vertices, triangles);
+    private static void UpdateConfiguration14(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.GetLeftIntersection(isoValue);
+        proceduralMesh.Vertices[1] = voxel.NorthWest.Center;
+        proceduralMesh.Vertices[2] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[3] = voxel.GetLeftIntersection(isoValue);
+        proceduralMesh.Vertices[4] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[5] = voxel.GetBottomIntersection(isoValue);
+        proceduralMesh.Vertices[6] = voxel.GetBottomIntersection(isoValue);
+        proceduralMesh.Vertices[7] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[8] = voxel.SouthEast.Center;
+    }
+
+    private static void RebuildConfiguration15(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices.AddRange(new Vector3[6]);
+        proceduralMesh.Triangles.AddRange(new int[] {0, 1, 2, 3, 4, 5});
+        UpdateConfiguration15(voxel, isoValue, proceduralMesh);
+    }
+
+    private static void UpdateConfiguration15(Voxel voxel, float isoValue, ProceduralMesh proceduralMesh)
+    {
+        proceduralMesh.Vertices[0] = voxel.SouthWest.Center;
+        proceduralMesh.Vertices[1] = voxel.NorthWest.Center;
+        proceduralMesh.Vertices[2] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[3] = voxel.NorthEast.Center;
+        proceduralMesh.Vertices[4] = voxel.SouthEast.Center;
+        proceduralMesh.Vertices[5] = voxel.SouthWest.Center;
     }
 }

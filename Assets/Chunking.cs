@@ -11,8 +11,8 @@ public class Chunking : MonoBehaviour
     {
         var worldWidth = 128;
         var worldHeight = 128;
-        var chunkWidth = 4;
-        var chunkHeight = 4;
+        var chunkWidth = 64;
+        var chunkHeight = 64;
 
         for (int row = 0; row < worldHeight; row += chunkHeight)
         {

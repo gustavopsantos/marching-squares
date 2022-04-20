@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class Voxel : MonoBehaviour
 {
+    private ProceduralMesh _procedural;
     private MeshFilter _meshFilter;
 
     public Vertex SouthWest { get; private set; } // bottom left
@@ -26,7 +28,7 @@ public class Voxel : MonoBehaviour
         NorthEast.Dependents.Add(this);
         SouthEast.Dependents.Add(this);
 
-        Configuration.OnValueChanged += (from, to) => Debug.Log($"Voxel config changed from {from} to {to}");
+        _procedural = new ProceduralMesh();
     }
 
     public byte CalculateConfiguration(float isoValue)
@@ -68,11 +70,25 @@ public class Voxel : MonoBehaviour
     private void Start()
     {
         _meshFilter = gameObject.GetComponent<MeshFilter>();
+        _meshFilter.sharedMesh = _procedural.Mesh;
+    }
+    
+    public void UpdateProceduralMesh(float isoValue, byte configuration)
+    {
+        GenerateVoxel.Update(this, isoValue, configuration, _procedural);
+        _procedural.Build();
     }
 
-    public void Rebuild(float isoValue)
+    public void RebuildProceduralMesh(float isoValue, byte configuration)
     {
-        _meshFilter.sharedMesh = GenerateVoxel.Generate(this, isoValue).ToMesh();
+        GenerateVoxel.Rebuild(this, isoValue, configuration, _procedural);
+        _procedural.Build();
+
+        //
+        //
+        // var replacement = GenerateVoxel.Generate(this, isoValue);
+        // replacement.Build();
+        // _meshFilter.sharedMesh = replacement.Mesh;
     }
 
     public void OnDrawGizmosSelected()

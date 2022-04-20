@@ -1,39 +1,18 @@
-using System;
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 public class ProceduralMesh
 {
-    public static readonly ProceduralMesh Empty = new ProceduralMesh(Array.Empty<Vector3>(), Array.Empty<int>());
+    public readonly Mesh Mesh = new Mesh();
+    public readonly List<Vector3> Vertices = new List<Vector3>();
+    public readonly List<int> Triangles = new List<int>();
 
-    private readonly List<Vector3> _vertices;
-    private readonly List<int> _triangles;
-
-    public ProceduralMesh(IEnumerable<Vector3> vertices, IEnumerable<int> triangles)
+    public void Build()
     {
-        _vertices = new List<Vector3>(vertices);
-        _triangles = new List<int>(triangles);
-    }
-
-    public Mesh ToMesh()
-    {
-        var mesh = new Mesh
-        {
-            vertices = _vertices.ToArray(),
-            triangles = _triangles.ToArray(),
-        };
-
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
-
-        return mesh;
-    }
-
-    public static ProceduralMesh operator +(ProceduralMesh a, ProceduralMesh b)
-    {
-        return new ProceduralMesh(
-            a._vertices.Concat(b._vertices),
-            a._triangles.Concat(b._triangles.Select(triangle => triangle + a._vertices.Count)));
+        Mesh.Clear();
+        Mesh.SetVertices(Vertices);
+        Mesh.SetTriangles(Triangles, 0);
+        Mesh.RecalculateBounds();
+        Mesh.RecalculateNormals();
     }
 }
