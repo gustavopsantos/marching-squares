@@ -13,6 +13,12 @@ public class Vertex
         Value = value;
         Center = center;
     }
+    
+    public static Vector2 Interpolate(Vertex a, Vertex b, float isoValue)
+    {
+        var normal = Mathf.InverseLerp(a.Value, b.Value, isoValue);
+        return Vector2.Lerp(a.Center, b.Center, normal);
+    }
 
     public void DrawGizmos()
     {

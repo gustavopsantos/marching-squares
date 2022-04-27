@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class Voxel : MonoBehaviour
 {
-    private MeshFilter _meshFilter;
+    [SerializeField] private MeshFilter _meshFilter;
 
     public Vertex SouthWest { get; private set; } // bottom left
     public Vertex NorthWest { get; private set; } // top left
@@ -35,38 +35,29 @@ public class Voxel : MonoBehaviour
         return configuration;
     }
 
-    public Vector2 GetLeftIntersection(float isoValue)
+    public Vector2 GetLeftEdgePoint(float isoValue)
     {
-        var leftIntersectionValue = Mathf.InverseLerp(NorthWest.Value, SouthWest.Value, isoValue);
-        return Vector2.Lerp(NorthWest.Center, SouthWest.Center, leftIntersectionValue);
+        return Vertex.Interpolate(NorthWest, SouthWest, isoValue);
     }
 
-    public Vector2 GetRightIntersection(float isoValue)
+    public Vector2 GetRightEdgePoint(float isoValue)
     {
-        var rightIntersectionValue = Mathf.InverseLerp(NorthEast.Value, SouthEast.Value, isoValue);
-        return Vector2.Lerp(NorthEast.Center, SouthEast.Center, rightIntersectionValue);
+        return Vertex.Interpolate(NorthEast, SouthEast, isoValue);
     }
 
-    public Vector2 GetBottomIntersection(float isoValue)
+    public Vector2 GetBottomEdgePoint(float isoValue)
     {
-        var bottomIntersectionValue = Mathf.InverseLerp(SouthWest.Value, SouthEast.Value, isoValue);
-        return Vector2.Lerp(SouthWest.Center, SouthEast.Center, bottomIntersectionValue);
+        return Vertex.Interpolate(SouthWest, SouthEast, isoValue);
     }
 
-    public Vector2 GetTopIntersection(float isoValue)
+    public Vector2 GetTopEdgePoint(float isoValue)
     {
-        var topIntersectionValue = Mathf.InverseLerp(NorthEast.Value, NorthWest.Value, isoValue);
-        return Vector2.Lerp(NorthEast.Center, NorthWest.Center, topIntersectionValue);
+        return Vertex.Interpolate(NorthEast, NorthWest, isoValue);
     }
 
-    private void Start()
+    public void RegenerateMesh(float isoValue)
     {
-        _meshFilter = gameObject.GetComponent<MeshFilter>();
-    }
-
-    public void Tick(float isoValue)
-    {
-        _meshFilter.sharedMesh = GenerateVoxel.Generate(this, isoValue).ToMesh();
+        _meshFilter.sharedMesh = GenerateVoxel.Generate(this, isoValue).Mesh;
     }
 
     public void OnDrawGizmosSelected()
@@ -85,10 +76,10 @@ public class Voxel : MonoBehaviour
         using (new GizmoColorScope(Color.yellow))
         {
             var gizmoSize = new Vector3(0.1f, 0.1f);
-            var l = GetLeftIntersection(isoValue);
-            var r = GetRightIntersection(isoValue);
-            var t = GetTopIntersection(isoValue);
-            var b = GetBottomIntersection(isoValue);
+            var l = GetLeftEdgePoint(isoValue);
+            var r = GetRightEdgePoint(isoValue);
+            var t = GetTopEdgePoint(isoValue);
+            var b = GetBottomEdgePoint(isoValue);
             Gizmos.DrawCube(l, gizmoSize);
             Gizmos.DrawCube(r, gizmoSize);
             Gizmos.DrawCube(t, gizmoSize);
